@@ -8,9 +8,27 @@
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <link rel="stylesheet" href="">
         <script src="//cdn.jsdelivr.net/npm/phaser@3.55.2/dist/phaser.min.js"></script>
+        <!--Add Scenes below-->
+        <script src="/assets/scenes/introScreen.js"></script>
+
+        <!-------------------->
     </head>
     <body>
-        
+        <script>
+
+            var config = {
+                type: Phaser.AUTO,
+                width: screen.width,
+                height: screen.height,
+                backgroundColor: '#000000',
+                parent: 'phaser-example',
+                //Add scenes here
+                scene: [ introScene ]
+            };
+            //Initializes the Scenes  
+            var game = new Phaser.Game(config);
+
+        </script>
 
     </body>
 </html>
