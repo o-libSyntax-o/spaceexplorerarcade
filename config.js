@@ -6,7 +6,7 @@ let config = {
     parent: 'phaser-example',
     physics: {default: 'arcade', arcade: { debug: true}},
     //Add scenes here
-    scene: [ gameScene , gameOver],
+    scene: [ gameScene , midScreen, gameOver],
     
 };
 

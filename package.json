@@ -1,0 +1,19 @@
+{
+  "name": "spacetycoonarcade",
+  "version": "1.0.0",
+  "description": "A tycoon that follows the 2022 TSA game design theme:\r **An arcade game for a museum.**",
+  "main": "undefined",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/o-libSyntax-o/spacetycoonarcade.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/o-libSyntax-o/spacetycoonarcade/issues"
+  },
+  "homepage": "https://github.com/o-libSyntax-o/spacetycoonarcade#readme"
+}

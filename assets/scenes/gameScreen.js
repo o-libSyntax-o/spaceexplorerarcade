@@ -1,8 +1,12 @@
 let gameTime;
 let totalScore;
+let multiplier;
+let gameSpeed;
+let desired = 5000;
+
 
 let gameScene = new Phaser.Class({
-  Extends: Phaser.Scene,
+  Extends: Phaser.Scene, 
 
   initialize: function gameScene() {
     Phaser.Scene.call(this, { key: "gameScene" });
@@ -10,29 +14,30 @@ let gameScene = new Phaser.Class({
 
   preload: function () {
     this.load.json("template", "assets/data/player.json"); //Default player data template\
-    this.load.json("shapes", 'assets/data/asteroid_shapes.json');
     this.load.atlas("ships", "assets/images/ship.png", "assets/data/ship.json");
     this.load.image("earth", "assets/images/earth.png");
-    this.load.image("star", "assets/images/star.png");
-    this.load.image("asteroid","assets/images/asteroid.png");
+    this.load.image("asteroid", "assets/images/asteroid.png");
   },
 
   update: function () {
     if (cursors.left.isDown) {
       ship.setVelocityX(-600);
       ship.play("theship");
+      ship.setAngle(-10);
     } else if (cursors.right.isDown) {
       ship.setVelocityX(600);
       ship.play("theship");
-
+      ship.setAngle(10);
     } else {
       ship.setVelocityX(0);
+      ship.setAngle(0);
     }
 
-    earth.data.values.score += 1 * earth.data.get("multiplier"); //Update score by multiplier every update
+    earth.data.values.score += 1; //Update score by multiplier every update
   },
 
   create: function () {
+    let gameS = this.scene.get("gameScene")
     this.physics.world.setBounds(0, 0, config.width, config.height, true, true);
 
     const text = this.add.text(0, 0, "", {
@@ -62,53 +67,11 @@ let gameScene = new Phaser.Class({
 
     let data = this.cache.json.get("template");
 
-    //Func for returning data in local storage
-    function loadData() {
-      try {
-        //Return value of storage string
-        //If the user doesn't have save data it loads from template
-        if (localStorage.getItem("saveGame") == undefined) {
-          localStorage.setItem("saveGame", JSON.stringify(data));
-          return localStorage.getItem("saveGame");
-          //If game data is found it loads from localStorage
-        } else {
-          return localStorage.getItem("saveGame");
-        }
-        //Error Exception
-      } catch (e) {
-        return (
-          "[ Space Tycoon ] Encountered an error while loading data: " +
-          e.message
-        );
-      }
-    }
-
-    //Func for saving new data to localStorage periodically...
-    let saveData = async function (data) {
-      try {
-        //Gets all data from game object and saves it
-        localStorage.setItem("saveGame", JSON.stringify(earth.data.getAll()));
-        return "[ Space Tycoon ] A save was instantiated";
-        //Error Exception
-      } catch (e) {
-        return (
-          "[ Space Tycoon ] Encountered an error while saving data: " +
-          e.message
-        );
-      }
-    };
-    
     //Asteroid logic
     let Asteroid = new Phaser.Class({
       Extends: Phaser.GameObjects.Sprite,
       initialize: function Asteroid(scene) {
-        Phaser.GameObjects.Sprite.call(
-          this,
-          scene,
-          0,
-          0,
-          "asteroid"
-        );
+        Phaser.GameObjects.Sprite.call(this, scene, 0, 0, "asteroid");
       },
 
       fire: function () {
@@ -165,7 +128,10 @@ let gameScene = new Phaser.Class({
     }
     this.physics.add.overlap(asteroid_collider, ship, hitAsteroid, null, this);
 
-    function getProgress(currentScore, desiredScore){
+    function getProgress(currentScore, desiredScore, x) {
+      if(currentScore == desiredScore){
+        gameS.scene.start("midScreen")
+      }
       return String(Math.round((100 * currentScore) / desiredScore)) + "%";
     }
 
@@ -174,14 +140,12 @@ let gameScene = new Phaser.Class({
     earth.setData(JSON.parse(loadData()));
     // When the data changes it will save everything to localStorage
     earth.on("changedata", function (gameObject, key, value) {
-      let score = earth.data.get("score")
+      let score = earth.data.get("score");
       text.setText(
-        "Score: " +
-           score +
-        "\nLives: " +
-          earth.data.get("lives") + 
-            "\nLevel Progress: " + 
-              String(getProgress(score, 100000))
+          "\nLives: " +
+          earth.data.get("lives") +
+          "\nLevel Progress: " +
+          String(getProgress(score, desired))
       );
     });
     //
@@ -193,8 +157,6 @@ let gameScene = new Phaser.Class({
       callback: function () {
         //Save Data
         saveData();
-        //Add a multiplier to score every 5 seconds
-        earth.data.values.multiplier += 10;
       },
       callbackScope: this,
       loop: true,
