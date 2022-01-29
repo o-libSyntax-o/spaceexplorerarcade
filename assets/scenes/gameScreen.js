@@ -4,9 +4,8 @@ let multiplier;
 let gameSpeed;
 let desired = 5000;
 
-
 let gameScene = new Phaser.Class({
-  Extends: Phaser.Scene, 
+  Extends: Phaser.Scene,
 
   initialize: function gameScene() {
     Phaser.Scene.call(this, { key: "gameScene" });
@@ -37,7 +36,7 @@ let gameScene = new Phaser.Class({
   },
 
   create: function () {
-    let gameS = this.scene.get("gameScene")
+    let gameS = this.scene.get("gameScene");
     this.physics.world.setBounds(0, 0, config.width, config.height, true, true);
 
     const text = this.add.text(0, 0, "", {
@@ -129,20 +128,20 @@ let gameScene = new Phaser.Class({
     this.physics.add.overlap(asteroid_collider, ship, hitAsteroid, null, this);
 
     function getProgress(currentScore, desiredScore, x) {
-      if(currentScore == desiredScore){
-        gameS.scene.start("midScreen")
+      if (currentScore == desiredScore) {
+        gameS.scene.start("midScreen");
       }
       return String(Math.round((100 * currentScore) / desiredScore)) + "%";
     }
 
     // -- ALL GAME DATA ELEMENTS --
     //Load player data into the game object
-    earth.setData(JSON.parse(functions.loadData()));
+    earth.setData(JSON.parse(loadData()));
     // When the data changes it will save everything to localStorage
     earth.on("changedata", function (gameObject, key, value) {
       let score = earth.data.get("score");
       text.setText(
-          "\nLives: " +
+        "\nLives: " +
           earth.data.get("lives") +
           "\nLevel Progress: " +
           String(getProgress(score, desired))
@@ -156,10 +155,44 @@ let gameScene = new Phaser.Class({
       delay: 5000,
       callback: function () {
         //Save Data
-        functions.saveData();
+        saveData();
       },
       callbackScope: this,
       loop: true,
     });
+    function loadData() {
+      try {
+        //Return value of storage string
+        //If the user doesn't have save data it loads from template
+        if (localStorage.getItem("saveGame") == undefined) {
+          localStorage.setItem("saveGame", JSON.stringify(data));
+          return localStorage.getItem("saveGame");
+          //If game data is found it loads from localStorage
+        } else {
+          return localStorage.getItem("saveGame");
+        }
+        //Error Exception
+      } catch (e) {
+        return (
+          "[ Space Tycoon ] Encountered an error while loading data: " +
+          e.message
+        );
+      }
+    }
+
+    //Func for saving new data to localStorage periodically...
+    let saveData = async function (data) {
+      try {
+        //Gets all data from game object and saves it
+        localStorage.setItem("saveGame", JSON.stringify(earth.data.getAll()));
+        return "[ Space Tycoon ] A save was instantiated";
+        //Error Exception
+      } catch (e) {
+        return (
+          "[ Space Tycoon ] Encountered an error while saving data: " +
+          e.message
+        );
+      }
+    };
   },
 });
