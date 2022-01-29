@@ -16,28 +16,34 @@ var midScreen = new Phaser.Class({
     },
 
     create: function ()
-    {
-        earth = this.add.image(0, config.height / 4, "earth");
-        const title_text = this.add.text(315, 150, "You've reached: ", {
-            font: "16px Courier",
-            fill: "#00ff00",
-        });
+    {   
+        function getName(){ 
+            return JSON.parse(loadData())
+        }
+
+        //Not constant
+        planet = this.add.image(0, config.height / 4, getName().level);
         const planet_text = this.add.text(300, 190, "E A R T H", {
             font: "32px Courier",
             fill: "#FFFFFF",
+        });
+
+        //Constants vvv
+        const title_text = this.add.text(315, 150, "You've reached: ", {
+            font: "16px Courier",
+            fill: "#00ff00",
         });
         const explored_text = this.add.text(180, 450, "THING'S WE SAW:", {
             font: "16px Courier",
             fill: "#FFFFFF",
         });
         info_box = this.add.rectangle(250, 630, config.width - 30, 300);
-
         info_box.setStrokeStyle(2, 0x00ff00);
 
     },
 
     update: function(){
-        earth.angle += 0.2
+        planet.angle += 0.2
     }
 
 });
