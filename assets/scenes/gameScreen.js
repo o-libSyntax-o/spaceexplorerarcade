@@ -137,7 +137,7 @@ let gameScene = new Phaser.Class({
 
     // -- ALL GAME DATA ELEMENTS --
     //Load player data into the game object
-    earth.setData(JSON.parse(loadData()));
+    earth.setData(JSON.parse(functions.loadData()));
     // When the data changes it will save everything to localStorage
     earth.on("changedata", function (gameObject, key, value) {
       let score = earth.data.get("score");
@@ -156,7 +156,7 @@ let gameScene = new Phaser.Class({
       delay: 5000,
       callback: function () {
         //Save Data
-        saveData();
+        functions.saveData();
       },
       callbackScope: this,
       loop: true,
