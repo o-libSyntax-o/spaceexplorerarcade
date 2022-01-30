@@ -64,8 +64,6 @@ let gameScene = new Phaser.Class({
 
     cursors = this.input.keyboard.createCursorKeys();
 
-    let data = this.cache.json.get("template");
-
     //Asteroid logic
     let Asteroid = new Phaser.Class({
       Extends: Phaser.GameObjects.Sprite,
@@ -136,7 +134,8 @@ let gameScene = new Phaser.Class({
 
     // -- ALL GAME DATA ELEMENTS --
     //Load player data into the game object
-    earth.setData(JSON.parse(loadData()));
+    let data = this.cache.json.get("template");
+    earth.setData(JSON.parse(loadData(data)));
     // When the data changes it will save everything to localStorage
     earth.on("changedata", function (gameObject, key, value) {
       let score = earth.data.get("score");
@@ -155,7 +154,7 @@ let gameScene = new Phaser.Class({
       delay: 5000,
       callback: function () {
         //Save Data
-        saveData();
+        saveData(earth.data);
       },
       callbackScope: this,
       loop: true,

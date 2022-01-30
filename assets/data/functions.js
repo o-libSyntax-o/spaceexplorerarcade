@@ -1,4 +1,4 @@
-function loadData() {
+function loadData(data) {
     try {
       //Return value of storage string
       //If the user doesn't have save data it loads from template
@@ -21,7 +21,7 @@ function loadData() {
   let saveData = async function (data) {
     try {
       //Gets all data from game object and saves it
-      localStorage.setItem("saveGame", JSON.stringify(earth.data.getAll()));
+      localStorage.setItem("saveGame", JSON.stringify(data.getAll()));
       return "[ Space Tycoon ] A save was instantiated";
       //Error Exception
     } catch (e) {
