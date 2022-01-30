@@ -160,6 +160,5 @@ let gameScene = new Phaser.Class({
       callbackScope: this,
       loop: true,
     });
-
   },
 });
