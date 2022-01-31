@@ -1,6 +1,5 @@
 let gameTime;
 let totalScore;
-let multiplier;
 let gameSpeed;
 let desired = 5000;
 
@@ -20,11 +19,11 @@ let gameScene = new Phaser.Class({
 
   update: function () {
     if (cursors.left.isDown) {
-      ship.setVelocityX(-600);
+      ship.setVelocityX(-700);
       ship.play("theship");
       ship.setAngle(-10);
     } else if (cursors.right.isDown) {
-      ship.setVelocityX(600);
+      ship.setVelocityX(700);
       ship.play("theship");
       ship.setAngle(10);
     } else {
@@ -36,6 +35,7 @@ let gameScene = new Phaser.Class({
   },
 
   create: function () {
+    let max = JSON.parse(localStorage.getItem('saveGame'));
     let gameS = this.scene.get("gameScene");
     this.physics.world.setBounds(0, 0, config.width, config.height, true, true);
 
@@ -61,7 +61,7 @@ let gameScene = new Phaser.Class({
     });
 
     asteroid_collider = this.physics.add.group();
-
+    
     cursors = this.input.keyboard.createCursorKeys();
 
     //Asteroid logic
@@ -73,7 +73,7 @@ let gameScene = new Phaser.Class({
 
       fire: function () {
         let ran = Phaser.Math.FloatBetween(0.05, 0.65);
-        this.speed = Phaser.Math.Between(3, 5);
+        this.speed = Phaser.Math.Between((3 * max.multiplier) / 2, (5 * max.multiplier) / 2);
         this.setPosition(Phaser.Math.Between(5, config.width - 5), -50);
         this.setAngle(Phaser.Math.Between(0, 360));
         this.setScale(ran, ran);
@@ -90,14 +90,14 @@ let gameScene = new Phaser.Class({
         }
       },
     });
-
+    
     asteroids = this.add.group({
       classType: Asteroid,
-      maxSize: 10,
+      maxSize: max.max,
       runChildUpdate: true,
     });
     //  Create the objects in advance, so they're ready and waiting in the pool
-    asteroids.createMultiple({ quantity: 10, active: false });
+    asteroids.createMultiple({ quantity: max.max, active: false });
 
     //Timer to spawn the asteroids
     this.time.addEvent({
@@ -120,6 +120,7 @@ let gameScene = new Phaser.Class({
         earth.data.values.lives--;
       } else {
         earth.data.values.lives--;
+        this.scene.stop();
         this.scene.start("gameOver");
       }
     }
@@ -134,8 +135,8 @@ let gameScene = new Phaser.Class({
 
     // -- ALL GAME DATA ELEMENTS --
     //Load player data into the game object
-    let data = this.cache.json.get("template");
-    earth.setData(JSON.parse(loadData(data)));
+    let template = this.cache.json.get("template");
+    earth.setData(JSON.parse(loadData(template)));
     // When the data changes it will save everything to localStorage
     earth.on("changedata", function (gameObject, key, value) {
       let score = earth.data.get("score");

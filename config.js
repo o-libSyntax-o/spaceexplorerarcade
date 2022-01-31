@@ -4,9 +4,9 @@ let config = {
     height: 800,
     backgroundColor: '#000000',
     parent: 'phaser-example',
-    physics: {default: 'arcade', arcade: { debug: true}},
+    physics: {default: 'arcade', arcade: { debug: false}},
     //Add scenes here
-    scene: [ gameScene , midScreen, gameOver],
+    scene: [ homeScene, gameScene ,midScreen, gameOver],
     
 };
 

@@ -1,6 +1,8 @@
 {
+  "id": 0,
   "score": 0,
   "level": "earth",
-  "multiplier": 1,
-  "lives": 3
+  "max": 10,
+  "lives": 3,
+  "multiplier": 1
 }

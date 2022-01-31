@@ -12,7 +12,11 @@ var midScreen = new Phaser.Class({
     preload: function ()
     {
         this.load.image("earth", "assets/images/earth.png");
-        this.load.plugin('rexroundrectangleplugin', 'https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexroundrectangleplugin.min.js', true);
+        this.load.image("moon", "assets/images/moon.png");
+        this.load.image("home", "assets/images/home.png");
+        this.load.image("play", "assets/images/start.png");
+        this.load.image("endless", "assets/images/galaxy.png")
+        this.load.json("template", "assets/data/player.json");
     },
 
     create: function ()
@@ -21,9 +25,45 @@ var midScreen = new Phaser.Class({
             return JSON.parse(loadData())
         }
 
+        function getTitle(){ 
+            let titles = ["E A R T H", " M O O N", " M A R S", "ENDLESS"];
+            return titles[JSON.parse(loadData()).id]
+        }
+
         //Not constant
         planet = this.add.image(0, config.height / 4, getName().level);
-        const planet_text = this.add.text(300, 190, "E A R T H", {
+        home = this.add.image(350, 275, "home").setInteractive().setScale(0.5,0.5);
+        play = this.add.image(425, 275, "play").setInteractive().setScale(0.5,0.5)
+
+        let data = JSON.parse(loadData());
+
+        play.once('pointerup', start, this);
+        home.once('pointerup',goHome, this);
+        
+
+        function start(){
+            let levels = ['earth', 'moon', 'mars'];
+            if (data.id > levels.length - 1){
+                data.level = "endless"
+            } else{
+                data.level = levels[data.id + 1]
+            }
+            data.id += 1;
+            data.max += 10;
+            data.lives = 3;
+            data.score = 0;
+            data.multiplier += 1;
+            localStorage.setItem('saveGame', JSON.stringify(data));
+            this.scene.stop();
+            this.scene.start('gameScene')
+        }
+
+        function goHome(){
+            this.scene.stop();
+            this.scene.start("homeScene");
+        }
+
+        const planet_text = this.add.text(300, 190, getTitle(), {
             font: "32px Courier",
             fill: "#FFFFFF",
         });
