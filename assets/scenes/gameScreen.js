@@ -12,7 +12,7 @@ let gameScene = new Phaser.Class({
 
   preload: function () {
     this.load.json("template", "assets/data/player.json"); //Default player data template\
-    this.load.atlas("ships", "assets/images/ship.png", "assets/data/ship.json");
+    this.load.atlas("ship", "assets/images/ship.png", "assets/data/ship.json");
     this.load.image("earth", "assets/images/earth.png");
     this.load.image("asteroid", "assets/images/asteroid.png");
   },
@@ -20,12 +20,10 @@ let gameScene = new Phaser.Class({
   update: function () {
     if (cursors.left.isDown) {
       ship.setVelocityX(-700);
-      ship.play("theship");
-      ship.setAngle(-10);
+      ship.setAngle(-15);
     } else if (cursors.right.isDown) {
       ship.setVelocityX(700);
-      ship.play("theship");
-      ship.setAngle(10);
+      ship.setAngle(15);
     } else {
       ship.setVelocityX(0);
       ship.setAngle(0);
@@ -44,21 +42,24 @@ let gameScene = new Phaser.Class({
       fill: "#00ff00",
     }); //Adds the planet into scene, all game data is stored in this object
     earth = this.add.image(0, 0, "earth").setAlpha(0);
-    ship = this.physics.add.sprite(config.width / 2, 700, "ships", 0);
+    ship = this.physics.add.sprite(config.width / 2, 700, "ship", 0);
     ship.setCollideWorldBounds(true);
     ship.setScale(1.5, 1.5);
 
     this.anims.create({
       key: "theship",
-      frameRate: 60,
-      frames: this.anims.generateFrameNames("ships", {
+      frameRate: 10,
+      frames: this.anims.generateFrameNames("ship", {
         prefix: "ship",
-        start: 2,
+        start: 3,
         end: 0,
         zeroPad: 0,
       }),
-      repeat: 0,
+      repeat: -1,
+      yoyo: true
     });
+
+    ship.play("theship");
 
     asteroid_collider = this.physics.add.group();
     
@@ -120,6 +121,7 @@ let gameScene = new Phaser.Class({
         earth.data.values.lives--;
       } else {
         earth.data.values.lives--;
+        saveData(earth.data);
         this.scene.stop();
         this.scene.start("gameOver");
       }
@@ -128,6 +130,7 @@ let gameScene = new Phaser.Class({
 
     function getProgress(currentScore, desiredScore, x) {
       if (currentScore == desiredScore) {
+        desired += 500;
         gameS.scene.start("midScreen");
       }
       return String(Math.round((100 * currentScore) / desiredScore)) + "%";

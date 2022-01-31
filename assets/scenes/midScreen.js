@@ -13,6 +13,7 @@ var midScreen = new Phaser.Class({
     {
         this.load.image("earth", "assets/images/earth.png");
         this.load.image("moon", "assets/images/moon.png");
+        this.load.image("mars", "assets/images/mars.png");
         this.load.image("home", "assets/images/home.png");
         this.load.image("play", "assets/images/start.png");
         this.load.image("endless", "assets/images/galaxy.png")
@@ -26,8 +27,14 @@ var midScreen = new Phaser.Class({
         }
 
         function getTitle(){ 
-            let titles = ["E A R T H", " M O O N", " M A R S", "ENDLESS"];
-            return titles[JSON.parse(loadData()).id]
+            if (getName().id > 2){
+                return " ENDLESS"
+            }
+            else{
+                let titles = ["E A R T H", " M O O N", " M A R S", "ENDLESS"];
+                return titles[JSON.parse(loadData()).id]
+            }
+            
         }
 
         //Not constant
@@ -42,9 +49,10 @@ var midScreen = new Phaser.Class({
         
 
         function start(){
-            let levels = ['earth', 'moon', 'mars'];
-            if (data.id > levels.length - 1){
+            let levels = ['earth', 'moon', 'mars', "endless"];
+            if (data.id > levels.length - 2){
                 data.level = "endless"
+
             } else{
                 data.level = levels[data.id + 1]
             }
