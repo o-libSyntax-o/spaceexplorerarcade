@@ -1,7 +1,7 @@
 let gameTime;
 let totalScore;
 let gameSpeed;
-let desired = 3500;
+let desired = 4500;
 
 let gameScene = new Phaser.Class({
   Extends: Phaser.Scene,
