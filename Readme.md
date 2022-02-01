@@ -1,5 +1,5 @@
 # Space Arcade
-##Built on [Phaser3](https://phaser.io/)
+## Built on [Phaser3](https://phaser.io/)
 
 #### Space Arcade, 2022 TSA Game Design entry
 
