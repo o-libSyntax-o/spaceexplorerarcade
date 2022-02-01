@@ -1,8 +1,9 @@
-# Space Tycoon Arcade
+# Space Arcade
+##Built on [Phaser3](https://phaser.io/)
 
-#### Space Tycoon Arcade, 2022 TSA Game Design entry
+#### Space Arcade, 2022 TSA Game Design entry
 
-A tycoon that follows the 2022 TSA game design theme:
-**An arcade game for a museum.**
+All Code used for the project can be found here
 
-The purpose of this game is to inform the player of space exploration history through a fun interactive experience
+run.bat: Runs local python server for serving the game locally (used in development)
+index.html: Entry into the game, starts a game instance with the loaded Phaser Scenes
