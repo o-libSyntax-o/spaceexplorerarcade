@@ -7,15 +7,16 @@ let introScene = new Phaser.Class({
     Phaser.Scene.call(this, { key: "introScene" });
   },
 
-  preload: function () {
-    //Load First Logo Image
-    this.load.image("logo", "/assets/images/logo.png");
-  },
+  preload: function () {},
 
   create: function () {
     let homeS = this.scene.get("homeScene");
     // Sets zone to half the size of the sceeen height and width from config
-    const logo = this.add.image(0, 0, "logo").setAlpha(0);
+    const logo = this.add.text(0, 0, "Colorado\nTSA\n2022", {
+      font: "28px Courier",
+      fill: "#00ff00",
+      align: "center",
+    });
     //TO - DO -- Make it a method for future use
     Phaser.Display.Align.In.Center(
       logo,
@@ -24,7 +25,7 @@ let introScene = new Phaser.Class({
     // Adds a Tween to the game manager for the fading in effect
     this.tweens.add({
       targets: logo,
-      alpha: { value: 0.8, hold: 500 },
+      alpha: { value: 0.1, hold: 500 },
       duration: 2000,
       yoyo: true,
       loop: 0,
@@ -37,7 +38,7 @@ let introScene = new Phaser.Class({
           "[ SPACE TYCOON ] Logo Tween complete - It has been removed"
         );
         homeS.scene.stop();
-        homeS.scene.start('homeScene');
+        homeS.scene.start("homeScene");
       },
     });
   },

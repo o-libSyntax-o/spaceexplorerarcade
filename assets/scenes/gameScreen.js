@@ -1,7 +1,7 @@
 let gameTime;
 let totalScore;
 let gameSpeed;
-let desired = 5000;
+let desired = 3500;
 
 let gameScene = new Phaser.Class({
   Extends: Phaser.Scene,
@@ -13,6 +13,11 @@ let gameScene = new Phaser.Class({
   preload: function () {
     this.load.json("template", "assets/data/player.json"); //Default player data template\
     this.load.atlas("ship", "assets/images/ship.png", "assets/data/ship.json");
+    this.load.atlas(
+      "stars",
+      "assets/images/stars.png",
+      "assets/data/stars.json"
+    );
     this.load.image("earth", "assets/images/earth.png");
     this.load.image("asteroid", "assets/images/asteroid.png");
   },
@@ -33,7 +38,7 @@ let gameScene = new Phaser.Class({
   },
 
   create: function () {
-    let max = JSON.parse(localStorage.getItem('saveGame'));
+    let max = JSON.parse(localStorage.getItem("saveGame"));
     let gameS = this.scene.get("gameScene");
     this.physics.world.setBounds(0, 0, config.width, config.height, true, true);
 
@@ -43,6 +48,7 @@ let gameScene = new Phaser.Class({
     }); //Adds the planet into scene, all game data is stored in this object
     earth = this.add.image(0, 0, "earth").setAlpha(0);
     ship = this.physics.add.sprite(config.width / 2, 700, "ship", 0);
+    stars = this.physics.add.sprite(250, 400, "stars");
     ship.setCollideWorldBounds(true);
     ship.setScale(1.5, 1.5);
 
@@ -56,13 +62,27 @@ let gameScene = new Phaser.Class({
         zeroPad: 0,
       }),
       repeat: -1,
-      yoyo: true
+      yoyo: true,
+    });
+
+    this.anims.create({
+      key: "thestars",
+      frameRate: 15,
+      frames: this.anims.generateFrameNames("stars", {
+        prefix: "stars",
+        start: 4,
+        end: 0,
+        zeroPad: 0,
+      }),
+      repeat: -1,
+      yoyo: true,
     });
 
     ship.play("theship");
+    stars.play("thestars");
 
     asteroid_collider = this.physics.add.group();
-    
+
     cursors = this.input.keyboard.createCursorKeys();
 
     //Asteroid logic
@@ -74,7 +94,10 @@ let gameScene = new Phaser.Class({
 
       fire: function () {
         let ran = Phaser.Math.FloatBetween(0.05, 0.65);
-        this.speed = Phaser.Math.Between((3 * max.multiplier) / 2, (5 * max.multiplier) / 2);
+        this.speed = Phaser.Math.Between(
+          (3 * max.multiplier) / 2,
+          (5 * max.multiplier) / 2
+        );
         this.setPosition(Phaser.Math.Between(5, config.width - 5), -50);
         this.setAngle(Phaser.Math.Between(0, 360));
         this.setScale(ran, ran);
@@ -91,7 +114,7 @@ let gameScene = new Phaser.Class({
         }
       },
     });
-    
+
     asteroids = this.add.group({
       classType: Asteroid,
       maxSize: max.max,
@@ -130,7 +153,7 @@ let gameScene = new Phaser.Class({
 
     function getProgress(currentScore, desiredScore, x) {
       if (currentScore == desiredScore) {
-        desired += 500;
+        desired += 200;
         gameS.scene.start("midScreen");
       }
       return String(Math.round((100 * currentScore) / desiredScore)) + "%";
